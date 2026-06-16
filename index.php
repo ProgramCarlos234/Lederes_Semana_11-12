@@ -728,6 +728,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                         </div>
                     </div>
                     <div class="top-bar-right">
+                        <a href="chatbot/index.html" class="theme-toggle" target="_blank" title="Asistente Médico">
+                            <i class="fas fa-comments"></i>
+                        </a>
                         <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
                             <i class="fas fa-moon"></i>
                         </button>
@@ -984,6 +987,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                     <small><strong>Credenciales de prueba:</strong><br>
                     <span style="color: var(--secondary); font-weight: 600;">Profesional:</span> ricardo.villanueva@ruralmed.com | ricardo1234<br>
                     <span style="color: var(--secondary); font-weight: 600;">Paciente:</span> juan@gmail.com | juan1234</small>
+                </div>
+                
+                <div style="text-align: center; margin: 0 30px 30px;">
+                    <a href="chatbot/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: var(--secondary); color: var(--on-secondary); padding: 12px 24px; border-radius: 24px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
+                        <i class="fas fa-comments"></i> Asistente Médico Inteligente
+                    </a>
                 </div>
             </div>
         </div>

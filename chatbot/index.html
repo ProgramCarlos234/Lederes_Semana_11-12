@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Médico RuralMed</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>RuralMed</span>
+                </div>
+                <div class="bot-status">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">Asistente Médico</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" id="chatbot-theme-toggle" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="chatbot-messages" id="chat-messages">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <p>¡Hola! 👋 Soy el <strong>Asistente Médico Inteligente de RuralMed</strong>. ¿En qué puedo ayudarte hoy?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chatbot-input-container">
+            <div class="quick-actions" id="quick-actions">
+                <button class="quick-btn" data-action="horarios">📅 Horarios de médicos</button>
+                <button class="quick-btn" data-action="especialidades">🏥 Especialidades</button>
+                <button class="quick-btn" data-action="agendar">📝 Agendar cita</button>
+                <button class="quick-btn" data-action="modo-doctor">👨‍⚕️ Modo Doctor</button>
+            </div>
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+                <button id="send-btn" title="Enviar">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
