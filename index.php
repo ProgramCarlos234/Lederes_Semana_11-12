@@ -554,55 +554,383 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RuralMed - Sistema de Gestión de Salud Rural</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
-    <script>
-        // Función para cambiar tema
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon();
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Login Styles */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #2E8B57, #3CB371);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .login-header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* Tabs */
+        .login-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .login-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .login-tab.active {
+            color: #2E8B57;
+            border-bottom-color: #2E8B57;
+            background: white;
+        }
+        
+        .login-form {
+            display: none;
+            padding: 30px;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #2E8B57;
+            outline: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2E8B57, #3CB371);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #868e96);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .alert {
+            margin: 20px 30px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        // Función para actualizar el ícono del botón
-        function updateThemeIcon() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme') || 'light';
-            const icon = document.querySelector('.theme-toggle i');
-            if (icon) {
-                icon.className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            }
+        /* App Styles */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8f9fa;
         }
-
-        // Cargar tema guardado al iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon();
-
-            // Función para menú móvil
-            const menuToggle = document.querySelector('.menu-toggle');
-            const sidebarOverlay = document.querySelector('.sidebar-overlay');
-            
-            if (menuToggle && sidebarOverlay) {
-                const toggleMenu = () => {
-                    document.body.classList.toggle('sidebar-open');
-                };
-                menuToggle.addEventListener('click', toggleMenu);
-                sidebarOverlay.addEventListener('click', toggleMenu);
-            }
-        });
-    </script>
+        
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50, #34495e);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-item.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+            border-left-color: #3498db;
+        }
+        
+        .sidebar-footer {
+            padding: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .user-info {
+            margin-bottom: 20px;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-role {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(231, 76, 60, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .stat-info h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        /* Additional styles for forms */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 12px;
+            width: auto;
+        }
+        
+        .btn-info { background: #17a2b8; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger { background: #dc3545; }
+    </style>
 </head>
 <body>
     <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
         <!-- Main App Layout -->
         <div class="app-container">
-            <!-- Sidebar Overlay -->
-            <div class="sidebar-overlay"></div>
-
             <!-- Sidebar -->
             <div class="sidebar">
                 <div class="sidebar-header">
@@ -610,7 +938,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                         <i class="fas fa-heartbeat"></i>
                         <span>RuralMed</span>
                     </div>
-                    <div class="sidebar-subtitle">Gestión de Salud</div>
                 </div>
                 
                 <nav class="sidebar-nav">
@@ -666,36 +993,20 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                 </nav>
                 
                 <div class="sidebar-footer">
-                    <button class="btn btn-primary" onclick="alert('Nuevo registro - puedes redirigir a la página que corresponda')">
-                        <i class="fas fa-plus"></i>
-                        <span>Nuevo Registro</span>
-                    </button>
-                    
                     <div class="user-info">
-                        <div class="user-avatar">
+                        <div class="user-name">
                             <?php 
-                            $nombre = $_SESSION['user_type'] == 'profesional' 
-                                ? ($_SESSION['user']['Nombres_Profesional'] ?? 'U') 
-                                : ($_SESSION['user']['Nombres_Completos'] ?? 'P');
-                            echo strtoupper(substr($nombre, 0, 1));
+                            if ($_SESSION['user_type'] == 'profesional') {
+                                echo 'Dr. ' . htmlspecialchars($_SESSION['user']['Nombres_Profesional'] ?? 'Usuario');
+                            } else {
+                                echo htmlspecialchars($_SESSION['user']['Nombres_Completos'] ?? 'Paciente');
+                            }
                             ?>
                         </div>
-                        <div class="user-details">
-                            <div class="user-name">
-                                <?php 
-                                if ($_SESSION['user_type'] == 'profesional') {
-                                    echo 'Dr. ' . htmlspecialchars($_SESSION['user']['Nombres_Profesional'] ?? 'Usuario');
-                                } else {
-                                    echo htmlspecialchars($_SESSION['user']['Nombres_Completos'] ?? 'Paciente');
-                                }
-                                ?>
-                            </div>
-                            <div class="user-role">
-                                <?php echo $_SESSION['user_type'] == 'profesional' ? 'Profesional de Salud' : 'Paciente'; ?>
-                            </div>
+                        <div class="user-role">
+                            <?php echo $_SESSION['user_type'] == 'profesional' ? 'Profesional de Salud' : 'Paciente'; ?>
                         </div>
                     </div>
-                    
                     <a href="?action=logout" class="logout-btn" onclick="return confirm('¿Está seguro de que desea cerrar sesión?')">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Cerrar Sesión</span>
@@ -707,63 +1018,20 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             <div class="main-content">
                 <!-- Top Bar -->
                 <div class="top-bar">
-                    <div class="top-bar-left">
-                        <button class="menu-toggle" aria-label="Abrir menú" title="Menú">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <h1 class="page-title">
-                            <?php 
-                            $titles = [
-                                'dashboard' => 'Dashboard Principal',
-                                'patients' => 'Gestión de Pacientes',
-                                'inventory' => 'Control de Inventario',
-                                'emergencies' => 'Gestión de Emergencias'
-                            ];
-                            echo $titles[$page] ?? 'Dashboard';
-                            ?>
-                        </h1>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Buscar...">
-                        </div>
-                    </div>
-                    <div class="top-bar-right">
-                        <a href="chatbot/index.html" class="theme-toggle" target="_blank" title="Asistente Médico">
-                            <i class="fas fa-comments"></i>
-                        </a>
-                        <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                        <div class="notifications" title="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-badge"></span>
-                        </div>
-                        <div class="top-bar-divider"></div>
-                        <div class="top-bar-user">
-                            <div class="top-bar-user-info">
-                                <div class="top-bar-user-name">
-                                    <?php 
-                                    if ($_SESSION['user_type'] == 'profesional') {
-                                        echo 'Dr. ' . htmlspecialchars($_SESSION['user']['Nombres_Profesional'] ?? 'Usuario');
-                                    } else {
-                                        echo htmlspecialchars($_SESSION['user']['Nombres_Completos'] ?? 'Paciente');
-                                    }
-                                    ?>
-                                </div>
-                                <div class="top-bar-user-role">
-                                    <?php echo $_SESSION['user_type'] == 'profesional' ? 'Profesional de Salud' : 'Paciente'; ?>
-                                </div>
-                            </div>
-                            <div class="top-bar-avatar">
-                                <?php 
-                                $nombre = $_SESSION['user_type'] == 'profesional' 
-                                    ? ($_SESSION['user']['Nombres_Profesional'] ?? 'U') 
-                                    : ($_SESSION['user']['Nombres_Completos'] ?? 'P');
-                                echo strtoupper(substr($nombre, 0, 1));
-                                ?>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="menu-toggle" aria-label="Abrir menú" title="Menú">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">
+                        <?php 
+                        $titles = [
+                            'dashboard' => 'Dashboard Principal',
+                            'patients' => 'Gestión de Pacientes',
+                            'inventory' => 'Control de Inventario',
+                            'emergencies' => 'Gestión de Emergencias'
+                        ];
+                        echo $titles[$page] ?? 'Dashboard';
+                        ?>
+                    </h1>
                 </div>
 
                 <!-- Content Area -->
@@ -884,8 +1152,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                 <?php endif; ?>
 
                 <div class="login-tabs">
-                    <div class="tab active" data-tab="login">Iniciar Sesión</div>
-                    <div class="tab" data-tab="register">Registrarse</div>
+                    <div class="login-tab active" data-tab="login">Iniciar Sesión</div>
+                    <div class="login-tab" data-tab="register">Registrarse</div>
                 </div>
 
                 <!-- FORMULARIO DE LOGIN -->
@@ -893,12 +1161,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                     <input type="hidden" name="action" value="login">
                     <div class="form-group">
                         <label>Correo Electrónico</label>
-                        <input type="email" name="email" placeholder="usuario@ruralmed.com" required value="ricardo.villanueva@ruralmed.com">
+                        <input type="email" name="email" placeholder="usuario@ruralmed.com" required value="admin@saludrural.com">
                     </div>
                     
                     <div class="form-group">
                         <label>Contraseña</label>
-                        <input type="password" name="password" placeholder="••••••••" required value="ricardo1234">
+                        <input type="password" name="password" placeholder="••••••••" required value="admin123">
                     </div>
                     
                     <div class="form-group">
@@ -983,16 +1251,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                     </button>
                 </form>
 
-                <div style="text-align: center; margin: 0 30px 30px; padding: 15px; background: var(--surface-container); border-radius: 8px; border: 1px solid var(--outline-variant);">
+                <div style="text-align: center; margin: 0 30px 30px; color: #666; padding: 15px; background: #f8f9fa; border-radius: 8px;">
                     <small><strong>Credenciales de prueba:</strong><br>
-                    <span style="color: var(--secondary); font-weight: 600;">Profesional:</span> ricardo.villanueva@ruralmed.com | ricardo1234<br>
-                    <span style="color: var(--secondary); font-weight: 600;">Paciente:</span> juan@gmail.com | juan1234</small>
-                </div>
-                
-                <div style="text-align: center; margin: 0 30px 30px;">
-                    <a href="chatbot/index.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: var(--secondary); color: var(--on-secondary); padding: 12px 24px; border-radius: 24px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
-                        <i class="fas fa-comments"></i> Asistente Médico Inteligente
-                    </a>
+                    Email: admin@saludrural.com | Contraseña: admin123</small>
                 </div>
             </div>
         </div>
@@ -1002,7 +1263,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     <script>
         // Sistema de Tabs para Login/Registro
         document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tab');
+            const tabs = document.querySelectorAll('.login-tab');
             const forms = document.querySelectorAll('.login-form');
             
             tabs.forEach(tab => {
