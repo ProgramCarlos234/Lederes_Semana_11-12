@@ -28,6 +28,9 @@
                         <a href="index.php?page=appointments" class="nav-link">Mis Citas</a>
                         <a href="index.php?page=clinical_records" class="nav-link">Mi Historial</a>
                     <?php endif; ?>
+                    <a href="index.php?page=chatbot" class="nav-link">
+                        <i class="fas fa-comments" style="margin-right:8px;"></i>Asistente Médico
+                    </a>
                     <a href="index.php?action=logout" class="nav-link logout">Cerrar Sesión</a>
                 <?php endif; ?>
             </nav>
